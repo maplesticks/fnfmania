@@ -45,6 +45,7 @@ import states.editors.CharacterEditorState;
 
 import substates.PauseSubState;
 import substates.GameOverSubstate;
+import substates.GameOverSubstate;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
@@ -254,6 +255,15 @@ class PlayState extends MusicBeatState
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
+
+	// FNF!MANIA VARIABLES !!!
+	
+	// normal ui things
+	var maniaWatermark:FlxText;
+	var songThingy:FlxText;
+	//ends
+
+	
 
 	override public function create()
 	{
