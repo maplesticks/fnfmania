@@ -14,6 +14,12 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'bool'); //Variable type
 		addOption(option);
 
+		var option:Option = new Option('Camera Movement on Note', 
+			'If checked, the camera will move in a certain note direction.',
+			'camMovementOnNote',
+			'bool');
+		addOption(option);
+
 		var option:Option = new Option('Middlescroll',
 			'If checked, your notes get centered.',
 			'middleScroll',
@@ -31,6 +37,17 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'ghostTapping',
 			'bool');
 		addOption(option);
+
+		var option:Option = new Option('Note Underlay Transprancy',
+			'How much transparent should the note underlay be?',
+			'noteUnderlayAlpha',
+			'percent');
+		option.scrollSpeed = 1.6;
+		option.minValue = 0.0;
+		option.maxValue = 1;
+		option.changeValue = 0.1;
+		option.decimals = 1;
+		addOption(option);
 		
 		var option:Option = new Option('Auto Pause',
 			"If checked, the game automatically pauses if the screen isn't on focus.",
@@ -38,6 +55,13 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'bool');
 		addOption(option);
 		option.onChange = onChangeAutoPause;
+
+		var option:Option = new Option('Judgement Counter',
+			"If checked, a judgement counter will appear, and tells your rating.",
+			'ghostTapping',
+			'bool');
+		addOption(option);
+
 
 		var option:Option = new Option('Disable Reset Button',
 			"If checked, pressing Reset won't do anything.",

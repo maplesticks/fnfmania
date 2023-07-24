@@ -40,7 +40,7 @@ class SaveVariables {
 		[0xFFFF884E, 0xFFFFFAF5, 0xFF6C0000]];
 
 	public var ghostTapping:Bool = true;
-	public var timeBarType:String = 'Time Left';
+	public var timeBarType:String = 'Current Time and Length';
 	public var scoreZoom:Bool = true;
 	public var noReset:Bool = false;
 	public var healthBarAlpha:Float = 1;
@@ -81,7 +81,7 @@ class SaveVariables {
 	public var camMovementOnNote:Bool = true;
 	public var judgementCounter:Bool = true;
 	public var noteUnderlayAlpha:Float = 0;
-	public var coloredTimeBar:Bool = true;
+	public var ratingScreenPopUp:Bool = true;
 
 	public function new()
 	{

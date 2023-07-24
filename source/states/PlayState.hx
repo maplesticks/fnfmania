@@ -171,6 +171,7 @@ class PlayState extends MusicBeatState
 
 	public var healthBar:HealthBar;
 	public var timeBar:HealthBar;
+	public var timeBarBG:FlxSprite;
 	var songPercent:Float = 0;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
@@ -472,9 +473,26 @@ class PlayState extends MusicBeatState
 		stagesFunc(function(stage:BaseStage) stage.createPost());
 
 		Conductor.songPosition = -5000 / Conductor.songPosition;
+
+		noteunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2); //STOLEN FROM OS ENGINE, sorry!
+		noteunderlayOpponent.alpha = ClientPrefs.data.noteUnderlayAlpha;
+		noteunderlayOpponent.color = FlxColor.BLACK;
+		noteunderlayOpponent.scrollFactor.set();
+		if(!ClientPrefs.data.middleScroll)
+		{
+			if(ClientPrefs.data.opponentStrums)
+			add(noteunderlayOpponent);
+		}
+
+		noteunderlay = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		noteunderlay.alpha = ClientPrefs.data.noteUnderlayAlpha;
+		noteunderlay.color = FlxColor.BLACK;
+		noteunderlay.scrollFactor.set();
+		add(noteunderlay);
+
 		var showTime:Bool = (ClientPrefs.data.timeBarType != 'Disabled');
 		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 19, 400, "", 32);
-		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timeTxt.setFormat(Paths.font("pm-full.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
 		timeTxt.borderSize = 2;
@@ -482,10 +500,16 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.data.downScroll) timeTxt.y = FlxG.height - 44;
 		if(ClientPrefs.data.timeBarType == 'Song Name') timeTxt.text = SONG.song;
 
-		maniaWatermark = new FlxText(10, 625, "fnf!mania! v1.0.0", 20);
-		maniaWatermark.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timeBarBG = new FlxSprite(0, 0).makeGraphic(200, 200);
+		timeBarBG.alpha = 0;
+		timeBarBG.color = FlxColor.GRAY;
+		timeBarBG.x = STRUM_X + (FlxG.width / 2);
+		timeBarBG.scrollFactor.set();
+		add(timeBarBG);
+
+		maniaWatermark = new FlxText(-10, 690, FlxG.width, 'fnf!mania (PREVIEW BUILD)', 20);
+		maniaWatermark.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		maniaWatermark.scrollFactor.set();
-		maniaWatermark.alpha = 0;
 		maniaWatermark.borderSize = 2;
 		maniaWatermark.visible = !ClientPrefs.data.hideHud;
 		add(maniaWatermark);
@@ -496,13 +520,6 @@ class PlayState extends MusicBeatState
 		songThingy.borderSize = 2;
 		songThingy.visible = !ClientPrefs.data.hideHud;
 		add(songThingy);
-
-		judgements = new FlxText(10, 690, FlxG.width, '', 20);
-		judgements.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		judgements.scrollFactor.set();
-		judgements.borderSize = 2;
-		judgements.visible = ClientPrefs.data.judgementCounter;
-		add(judgements);
 
 		timeBar = new HealthBar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', function() return songPercent, 0, 1);
 		timeBar.scrollFactor.set();
@@ -515,6 +532,16 @@ class PlayState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		add(strumLineNotes);
 		add(grpNoteSplashes);
+
+		judgements = new FlxText(10, 690, FlxG.width, '', 20);
+		judgements.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		judgements.scrollFactor.set();
+		judgements.borderSize = 2;
+		judgements.visible = ClientPrefs.data.judgementCounter;
+		judgements.screenCenter(Y);
+		add(judgements);
+
+
 
 		if(ClientPrefs.data.timeBarType == 'Song Name')
 		{
@@ -571,14 +598,14 @@ class PlayState extends MusicBeatState
 		add(iconP2);
 
 		scoreTxt = new FlxText(0, healthBar.y + 40, FlxG.width, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
 		add(scoreTxt);
 
-		botplayTxt = new FlxText(400, timeBar.x + 100, FlxG.width - 800, "BOTPLAY - Score will not save!", 32);
-		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		botplayTxt = new FlxText(400, timeBar.x + 100, FlxG.width - 800, "SHOWCASE MODE", 24);
+		botplayTxt.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
 		botplayTxt.visible = cpuControlled;
@@ -597,10 +624,14 @@ class PlayState extends MusicBeatState
 
 		maniaWatermark.cameras = [camHUD];
 		songThingy.cameras = [camHUD];
+		judgements.cameras = [camHUD];
 
 		botplayTxt.cameras = [camHUD];
 		timeBar.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
+		timeBarBG.cameras = [camHUD];
+		noteunderlayOpponent.cameras = [camHUD];
+		noteunderlay.cameras = [camHUD];
 
 		startingSong = true;
 		
@@ -948,6 +979,12 @@ class PlayState extends MusicBeatState
 				//if(ClientPrefs.data.middleScroll) opponentStrums.members[i].visible = false;
 			}
 
+			noteunderlayOpponent.x = opponentStrums.members[0].x - 25;
+			noteunderlayOpponent.screenCenter(Y);
+
+			noteunderlay.x = playerStrums.members[0].x - 25;
+			noteunderlay.screenCenter(Y);
+
 			startedCountdown = true;
 			Conductor.songPosition = -Conductor.crochet * 5;
 			setOnLuas('startedCountdown', true);
@@ -1105,12 +1142,11 @@ class PlayState extends MusicBeatState
 		if(totalPlayed != 0)
 		{
 			var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
-			str += '$percent% - $ratingName';
+			str +=  'Misses: ' + songMisses
+			+ ' | Accuracy: $percent% - [$ratingFC | $ratingName]';
 		}
 
-		scoreTxt.text = 'Score: ' + songScore
-		+ ' | Misses: ' + songMisses
-		+ ' | Accuracy: ' + str;
+		scoreTxt.text = str;
 
 		if(ClientPrefs.data.scoreZoom && !miss && !cpuControlled)
 		{
@@ -1178,7 +1214,7 @@ class PlayState extends MusicBeatState
 
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
-		FlxTween.tween(timeBar, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
+		//FlxTween.tween(timeBarBG, {alpha: 0.4}, 0.5, {ease: FlxEase.circOut});
 		FlxTween.tween(timeTxt, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 
 		#if desktop
@@ -1600,6 +1636,7 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
+
 		setOnLuas('curDecStep', curDecStep);
 		setOnLuas('curDecBeat', curDecBeat);
 
@@ -1660,6 +1697,8 @@ class PlayState extends MusicBeatState
 
 			if(ClientPrefs.data.timeBarType != 'Song Name')
 				timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+			else if(ClientPrefs.data.timeBarType == 'Current Time and Length' && ClientPrefs.data.timeBarType != 'Song Name') 
+			timeTxt.text = FlxStringUtil.formatTime(Math.max(0, Math.floor(curTime / 1000)), false) + ' / ' + FlxStringUtil.formatTime(Math.max(0, Math.floor(FlxG.sound.music.length / 1000)), false);
 		}
 
 		if (camZooming)
@@ -2378,6 +2417,7 @@ class PlayState extends MusicBeatState
 	public var showCombo:Bool = false;
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
+
 
 	// stores the last judgement object
 	var lastRating:FlxSprite;
@@ -3279,7 +3319,18 @@ class PlayState extends MusicBeatState
 		}
 		else if (songMisses < 10)
 			ratingFC = 'SDCB';
+
+		judgements.text = '	
+		Total Notes Hit: $totalNotesHit
+		Sicks: $sicks
+		Goods: $goods
+		Bads: $bads
+		Shits: $shits
+		Combo: $combo
+		Score: $songScore ';
 	}
+
+	
 
 	#if ACHIEVEMENTS_ALLOWED
 	private function checkForAchievement(achievesToCheck:Array<String> = null):String
