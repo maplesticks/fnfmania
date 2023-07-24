@@ -261,9 +261,12 @@ class PlayState extends MusicBeatState
 	// normal ui things
 	var maniaWatermark:FlxText;
 	var songThingy:FlxText;
+	var judgements:FlxText;
+	var totalCombo:FlxText;
+	var notesHit:FlxText;
 	//ends
 
-	
+
 
 	override public function create()
 	{
@@ -468,6 +471,21 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.data.downScroll) timeTxt.y = FlxG.height - 44;
 		if(ClientPrefs.data.timeBarType == 'Song Name') timeTxt.text = SONG.song;
 
+		maniaWatermark = new FlxText(10, 750, "fnfmania! v1.0.0", 20);
+		maniaWatermark.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		maniaWatermark.scrollFactor.set();
+		maniaWatermark.alpha = 0;
+		maniaWatermark.borderSize = 2;
+		maniaWatermark.visible = !ClientPrefs.data.hideHud;
+		add(maniaWatermark);
+
+		songThingy = new FlxText(10, 710, FlxG.width, songName + ' - ' + storyDifficultyText, 20);
+		songThingy.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		songThingy.scrollFactor.set();
+		songThingy.borderSize = 2;
+		songThingy.visible = !ClientPrefs.data.hideHud;
+		add(songThingy);
+
 		timeBar = new HealthBar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', function() return songPercent, 0, 1);
 		timeBar.scrollFactor.set();
 		timeBar.screenCenter(X);
@@ -558,6 +576,9 @@ class PlayState extends MusicBeatState
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
+
+		maniaWatermark.cameras = [camHUD];
+		songThingy.cameras = [camHUD];
 
 		botplayTxt.cameras = [camHUD];
 		timeBar.cameras = [camHUD];
@@ -1059,16 +1080,16 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
-		var str:String = ratingName;
-		if(totalPlayed != 0)
+		var str:String = '';
+		if(totalPlayed != 0 && ratingName != '?' ?)
 		{
 			var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
-			str += ' ($percent%) - $ratingFC';
+			str += '[$percent% - $ratingName]';
 		}
 
 		scoreTxt.text = 'Score: ' + songScore
 		+ ' | Misses: ' + songMisses
-		+ ' | Rating: ' + str;
+		+ ' | Accuracy: ' + str;
 
 		if(ClientPrefs.data.scoreZoom && !miss && !cpuControlled)
 		{
@@ -2431,6 +2452,10 @@ class PlayState extends MusicBeatState
 
 		if(combo >= 1000) {
 			seperatedScore.push(Math.floor(combo / 1000) % 10);
+		}
+		if(combo >= 10) {
+			add(comboSpr);
+			showCombo = true;
 		}
 		seperatedScore.push(Math.floor(combo / 100) % 10);
 		seperatedScore.push(Math.floor(combo / 10) % 10);
