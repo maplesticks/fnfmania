@@ -66,6 +66,7 @@ class MainMenuState extends MusicBeatState
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
+		bg.color = 0x1A1A1A;
 		bg.updateHitbox();
 		bg.screenCenter();
 		add(bg);
@@ -80,7 +81,7 @@ class MainMenuState extends MusicBeatState
 		magenta.updateHitbox();
 		magenta.screenCenter();
 		magenta.visible = false;
-		magenta.color = 0xFFfd719b;
+		magenta.color = 0xff323232;
 		add(magenta);
 		
 		// magenta.scrollFactor.set();

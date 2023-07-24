@@ -77,6 +77,11 @@ class SaveVariables {
 	public var badWindow:Int = 135;
 	public var safeFrames:Float = 10;
 	public var discordRPC:Bool = true;
+	//fnf!mania settings starts here
+	public var camMovementOnNote:Bool = true;
+	public var judgementCounter:Bool = true;
+	public var noteUnderlayAlpha:Float = 0;
+	public var coloredTimeBar:Bool = true;
 
 	public function new()
 	{
