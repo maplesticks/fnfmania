@@ -2360,10 +2360,10 @@ class PlayState extends MusicBeatState
 					LoadingState.loadAndSwitchState(new PlayState());
 				}
 			}
-			else if(ClientPrefs.data.ratingScreenPopUp)
+		/*	else if(ClientPrefs.data.ratingScreenPopUp)
 			{
-		//		openSubstate(new ResultsSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y)); making this substate into a function in playstate
-			}
+				openSubstate(new ResultsSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y)); making this substate into a function in playstate
+			} */
 			else
 			{
 				trace('WENT BACK TO FREEPLAY??');
