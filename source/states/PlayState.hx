@@ -18,6 +18,9 @@ import backend.Song;
 import backend.Section;
 import backend.Rating;
 
+
+import flixel.addons.display.FlxBackdrop;
+import flixel.addons.display.FlxGridOverlay;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSubState;
@@ -45,7 +48,6 @@ import states.editors.CharacterEditorState;
 
 import substates.PauseSubState;
 import substates.GameOverSubstate;
-import substates.ResultsSubState;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
@@ -275,6 +277,17 @@ class PlayState extends MusicBeatState
 	public var bfCamY:Float = 0;
 	public var dadCamX:Float = 0;
 	public var dadCamY:Float = 0;
+
+	//results screen
+	var resultsScreenText:FlxText;
+	var resultsScreenSubText:FlxText;
+
+	var totalRank:FlxText;
+
+	var bg:FlxSprite;
+
+	var continueText:FlxText;
+	var songInfo:FlxText;
 	//ends
 
 
@@ -2360,10 +2373,10 @@ class PlayState extends MusicBeatState
 					LoadingState.loadAndSwitchState(new PlayState());
 				}
 			}
-		/*	else if(ClientPrefs.data.ratingScreenPopUp)
+			else if(ClientPrefs.data.ratingScreenPopUp && !isStoryMode)
 			{
-				openSubstate(new ResultsSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y)); making this substate into a function in playstate
-			} */
+				resultsPopUp();
+			} 
 			else
 			{
 				trace('WENT BACK TO FREEPLAY??');
@@ -2399,6 +2412,105 @@ class PlayState extends MusicBeatState
 		}
 	}
 	#end
+
+	public function resultsPopUp() {
+		FlxG.sound.playMusic(Paths.music('freakyMenu'));
+
+		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		bg.alpha = 0;
+		bg.scrollFactor.set();
+		bg.cameras = [camOther];
+		add(bg);
+
+		var grid:FlxBackdrop = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true, 0x33FFFFFF, 0x0));
+		grid.velocity.set(40, 40);
+		grid.alpha = 0;
+		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
+		add(grid);
+
+		var bgChecker:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		bg.alpha = 0;
+		bg.scrollFactor.set();
+		bg.cameras = [camOther];
+		add(bg);
+
+		var songInfo:FlxText = new FlxText(20, 15, 0, PlayState.SONG.song + ' [' + Difficulty.getString().toUpperCase() + ']', 32);
+		songInfo.scrollFactor.set();
+		songInfo.setFormat(Paths.font("pm-full.ttf"), 32);
+		songInfo.borderSize = 2;
+		songInfo.updateHitbox();
+		songInfo.screenCenter(X);
+		songInfo.cameras = [camOther];
+		add(songInfo);
+
+		continueText = new FlxText(-10, 725, FlxG.width, 'Press the Accept Key to continue.', 20);
+		continueText.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		continueText.scrollFactor.set();
+		continueText.borderSize = 2;
+		continueText.cameras = [camOther];
+		add(continueText);
+
+
+		var resultsScreenText:FlxText = new FlxText(900, 15, '', 64);
+		resultsScreenText.scrollFactor.set();
+		resultsScreenText.setFormat(Paths.font("pm-full.ttf"), 64);
+		resultsScreenText.updateHitbox();
+		resultsScreenText.screenCenter(Y);
+		resultsScreenText.borderSize = 2;
+		resultsScreenText.cameras = [camOther];
+		add(resultsScreenText);
+
+		resultsScreenSubText = new FlxText(0, 690, FlxG.width, '', 20);
+		resultsScreenSubText.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		resultsScreenSubText.scrollFactor.set();
+		resultsScreenSubText.borderSize = 2;
+		resultsScreenSubText.alpha = 0;
+		resultsScreenSubText.visible = ClientPrefs.data.judgementCounter;
+		resultsScreenSubText.screenCenter(Y);
+		resultsScreenSubText.cameras = [camOther];
+		add(resultsScreenSubText);
+
+	 
+		resultsScreenText.text += ratingName;
+
+		var percent:Float = CoolUtil.floorDecimal(ratingPercent * 100, 2);
+
+		resultsScreenSubText.text =  '	
+		Score: $songScore
+		Accuracy: $percent%
+		Misses: $songMisses';
+		if(songMisses == 0)
+		{
+			resultsScreenSubText.text += '
+			Full Combo!';
+		}
+
+		
+		songInfo.alpha = 0;
+
+		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(songInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});	
+		FlxTween.tween(continueText, {alpha: 1, y: 690}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});	
+		FlxTween.tween(resultsScreenSubText, {alpha: 1, x: 10}, 0.5, {ease: FlxEase.quartInOut, startDelay: 0.4});	
+		FlxTween.tween(camHUD, {alpha: 0}, 0.3, {ease: FlxEase.quartInOut});
+
+		canPause = false;
+
+		if (controls.ACCEPT)
+			{
+				trace('WENT BACK TO FREEPLAY??');
+				Mods.loadTopMod();
+				#if desktop DiscordClient.resetClientID(); #end
+		
+				cancelMusicFadeTween();
+				if(FlxTransitionableState.skipNextTransIn) {
+					CustomFadeTransition.nextCamera = null;
+				}
+				MusicBeatState.switchState(new FreeplayState());
+				changedDifficulty = false;
+				transitioning = true;
+			}
+	}
 
 	public function KillNotes() {
 		while(notes.length > 0) {
@@ -2630,7 +2742,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!cpuControlled && startedCountdown && !paused && key > -1)
 		{
-			if(notes.length > 0 && !boyfriend.stunned && generatedMusic && !endingSong)
+			if(notes.length > 0 && !boyfriend.stunned && generatedMusic)
 			{
 				//more accurate hit time for the ratings?
 				var lastTime:Float = Conductor.songPosition;

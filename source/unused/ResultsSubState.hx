@@ -1,4 +1,4 @@
-package substates;
+package unused; //went unused, now a function for playstate
 
 import backend.WeekData;
 import backend.Highscore;

@@ -16,6 +16,8 @@ import openfl.Lib;
 import openfl.system.System;
 #end
 
+import states.MainMenuState;
+
 /**
 	The FPS class provides an easy-to-use monitor to display
 	the current frame rate of an OpenFL project
@@ -45,7 +47,7 @@ class FPS extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("_sans", 14, color);
+		defaultTextFormat = new TextFormat("VCR OSD Mono", 14, color);
 		autoSize = LEFT;
 		multiline = true;
 		text = "FPS: ";
@@ -83,18 +85,19 @@ class FPS extends TextField
 		{
 			text = "FPS: " + currentFPS;
 			var memoryMegas:Float = 0;
-			
+		
+			text += "\nFNF!MANIA (PREVIEW BUILD)";
+			text += "\nPE " + MainMenuState.psychEngineVersion;
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 			text += "\nMemory: " + memoryMegas + " MB";
 			#end
-			text += "\nfnf!mania v0.1.0 (PREVIEW BUILD)";
 
 			textColor = 0xFFFFFFFF;
-			if (memoryMegas > 3000 || currentFPS <= ClientPrefs.data.framerate / 2)
+		/*	if (memoryMegas > 3000 || currentFPS <= ClientPrefs.data.framerate / 2)
 			{
 				textColor = 0xFFFF0000;
-			}
+			} */
 
 			#if (gl_stats && !disable_cffi && (!html5 || !canvas))
 			text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
