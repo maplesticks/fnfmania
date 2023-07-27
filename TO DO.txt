@@ -1,0 +1,86 @@
+hey you! we are desperately looking for contributors to help us out on this!!!!
+
+list starts here
+
+Strum Offset Editor - Edit offset from strums;
+‌Stage Editor - Creates json file with objects;
+‌Credits Editor - Create credits in a visual way;
+‌VisualNovelEditor - Create sequences of images that run before the song start (has chat enabled in it and it works exactly like it);
+‌Cutscene Editor - Create cutscenes that play before the song starts;
+
+All Changes/Features:
+[Main]
+‌Lua in mainmenu;
+‌Limit of 1 mod enabled;
+‌FNF!MANIA Theme ("secret");
+‌Better color picker UI;
+‌Simple gallery state (just like twinsonia);
+‌"Go to options" added in pause menu;
+‌Death state can have other chars death animations;
+‌Define Rules System for your mod - Change how UI looks and Enable new functions for your mod;
+‌Option to "quick save" and "save in" in editors ('quick save' writes the file in your mods folder that you are using at the moment, 'save in' just makes you save the file in any folder you want);
+‌Warning Pop Up;
+‌New Discord Status;
+‌Fixed tweens in playstate not pausing
+‌Fixed audios in playstate not pausing
+
+‌[Engine options definer] (Engine rules)
+‌Define Health Bar style (fnf style or psych engine style);
+‌Change Achievements style;
+
+‌Save ER in json file;
+‌Load ER at the start of the game;
+
+‌[Mods]
+‌After a mod is selected the path to the mod files is saved to make autosave functions work (they will create files for you);
+
+‌[Mainmenu]
+‌Acces to Gallery (Needs to be enabled in project.xml);
+‌Class MainMenuItem;
+‌Function to set align of menuItens (left, right, center);
+‌Lua (folder: mainmenu/)
+
+‌[Chart Editor]
+‌Swap all notes of specific type to another
+‌Move note with control left/right
+‌Copy/Paste note;
+‌Event system updated;
+‌Events Plus;
+‌Lua for extensions (folder: chartextensions);
+
+‌Events:
+‌Change current stage;
+‌Change notes skin;
+‌Change Playable Character
+‌Set health to number;
+‌ Cinematic Bars;
+‌On/Off Hit GlowGlow;
+‌On/Off Damage on opponent hit note;
+
+‌[Character Editor]
+‌Input to path changed to file input where you drop the image and it creates the file in your folder;
+‌Move char with mouse to adjust offset;
+‌Show all icons of current character;
+‌Show shadow of dad/bf;
+
+‌[Week Editor]
+‌Add color to week background & sprites;
+‌Add tag to week (used in freeplay);
+
+‌[Menu Character Editor]
+‌Move char with mouse to adjust offset;
+
+‌[Freeplay]
+‌Load only songs with a certain tag (new Freeplay('tag'););
+‌Search for songs by name;
+
+‌[Options]
+‌Substate (like kade engine);
+‌Removed FPS (it breaks how time works);
+‌Option of time bar color (Normal, Opponent Color);
+
+‌[PlayState]
+‌Cinematic Bars;
+‌JSON icon files for additional customization (offset-y, isAnimated, fps);
+‌Animated Icons;‌
+‌Offset Y for icons (When start do + offset and when change do - because it fixes shit)
