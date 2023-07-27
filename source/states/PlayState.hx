@@ -18,9 +18,6 @@ import backend.Song;
 import backend.Section;
 import backend.Rating;
 
-
-import flixel.addons.display.FlxBackdrop;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSubState;
@@ -48,6 +45,7 @@ import states.editors.CharacterEditorState;
 
 import substates.PauseSubState;
 import substates.GameOverSubstate;
+import substates.ResultsSubState;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
@@ -59,14 +57,12 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
-/*
 #if VIDEOS_ALLOWED 
 #if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideo as VideoHandler;
 #elseif (hxCodec >= "2.6.1") import hxcodec.VideoHandler as VideoHandler;
 #elseif (hxCodec == "2.6.0") import VideoHandler as VideoHandler;
 #else import vlc.VideoHandler; #end
 #end
-*/
 
 import objects.Note.EventNote;
 import objects.*;
@@ -292,17 +288,6 @@ class PlayState extends MusicBeatState
 	public var bfCamY:Float = 0;
 	public var dadCamX:Float = 0;
 	public var dadCamY:Float = 0;
-
-	//results screen
-	var resultsScreenText:FlxText;
-	var resultsScreenSubText:FlxText;
-
-	var totalRank:FlxText;
-
-	var bg:FlxSprite;
-
-	var continueText:FlxText;
-	var songInfo:FlxText;
 	//ends
 
 
@@ -878,7 +863,6 @@ class PlayState extends MusicBeatState
 
 	public function startVideo(name:String)
 	{
-		/*
 		#if VIDEOS_ALLOWED
 		inCutscene = true;
 
@@ -918,7 +902,6 @@ class PlayState extends MusicBeatState
 		startAndEnd();
 		return;
 		#end
-		*/
 	}
 
 	function startAndEnd()
@@ -1538,6 +1521,7 @@ class PlayState extends MusicBeatState
 		stagesFunc(function(stage:BaseStage) stage.openSubState(SubState));
 		if (paused)
 		{
+			FlxTween.globalManager.active = false;
 			if (FlxG.sound.music != null)
 			{
 				FlxG.sound.music.pause();
@@ -1567,6 +1551,7 @@ class PlayState extends MusicBeatState
 		stagesFunc(function(stage:BaseStage) stage.closeSubState());
 		if (paused)
 		{
+			FlxTween.globalManager.active = true;
 			if (FlxG.sound.music != null && !startingSong)
 			{
 				resyncVocals();
@@ -1720,8 +1705,21 @@ class PlayState extends MusicBeatState
 		if (health > 2) health = 2;
 		iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
 		iconP2.x = healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
-		iconP1.animation.curAnim.curFrame = (healthBar.percent < 20) ? 1 : 0;
-		iconP2.animation.curAnim.curFrame = (healthBar.percent > 80) ? 1 : 0;
+		
+		// Code for 3-1 icons.
+		if(healthBar.percent < 20 && iconP1.numFrames > 1)
+			iconP1.animation.curAnim.curFrame = 1;
+		else if (healthBar.percent > 80 && iconP1.numFrames > 2)
+			iconP1.animation.curAnim.curFrame = 2;
+		else
+			iconP1.animation.curAnim.curFrame = 0;
+		
+		if(healthBar.percent > 80 && iconP2.numFrames > 1)
+			iconP2.animation.curAnim.curFrame = 1;
+		else if (healthBar.percent < 20 && iconP2.numFrames > 2)
+			iconP2.animation.curAnim.curFrame = 2;
+		else
+			iconP2.animation.curAnim.curFrame = 0;
 
 		if (controls.justPressed('debug_2') && !endingSong && !inCutscene)
 			openCharacterEditor();
@@ -2439,10 +2437,10 @@ class PlayState extends MusicBeatState
 					LoadingState.loadAndSwitchState(new PlayState());
 				}
 			}
-		/*	else if(ClientPrefs.data.ratingScreenPopUp && !isStoryMode) note: this somehow softlocks the game and idk why
+			else if(ClientPrefs.data.ratingScreenPopUp && !isStoryMode)
 			{
 				resultsPopUp();
-			}  */
+			} 
 			else
 			{
 				trace('WENT BACK TO FREEPLAY??');
@@ -2531,6 +2529,7 @@ class PlayState extends MusicBeatState
 		resultsScreenSubText.scrollFactor.set();
 		resultsScreenSubText.borderSize = 2;
 		resultsScreenSubText.alpha = 0;
+		resultsScreenSubText.visible = ClientPrefs.data.judgementCounter;
 		resultsScreenSubText.screenCenter(Y);
 		resultsScreenSubText.cameras = [camOther];
 		add(resultsScreenSubText);
@@ -2837,7 +2836,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!cpuControlled && startedCountdown && !paused && key > -1)
 		{
-			if(notes.length > 0 && !boyfriend.stunned && generatedMusic)
+			if(notes.length > 0 && !boyfriend.stunned && generatedMusic && !endingSong)
 			{
 				//more accurate hit time for the ratings?
 				var lastTime:Float = Conductor.songPosition;

@@ -36,14 +36,29 @@ class HealthIcon extends FlxSprite
 			var name:String = 'icons/' + char;
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
-			
+			if(!Paths.fileExists('images/' + name + '.png', IMAGE) && name == 'icons/') name = 'icons/icon-unknow';
+
 			var graphic = Paths.image(name, allowGPU);
-			loadGraphic(graphic, true, Math.floor(graphic.width / 2), Math.floor(graphic.height));
-			iconOffsets[0] = (width - 150) / 2;
-			iconOffsets[1] = (height - 150) / 2;
+
+			loadGraphic(graphic); //Load stupidly first for getting the file size
+			var heads:Int = 2;
+			if(width == 150){heads = 1;}
+			if(width == 300){heads = 2;}
+			if(width == 450){heads = 3;}
+
+			loadGraphic(graphic, true, Math.floor(graphic.width / heads), Math.floor(graphic.height));
+			iconOffsets[0] = (width - 150) / heads;
+			iconOffsets[1] = (width - 150) / heads;
 			updateHitbox();
 
-			animation.add(char, [0, 1], 0, false, isPlayer);
+			var iconFrames:Array<Int> = [];
+			var i:Int = 0;
+			while(i + 1 <= heads){
+				iconFrames.push(i);
+				i++;
+			}
+
+			animation.add(char, iconFrames, 0, false, isPlayer);
 			animation.play(char);
 			this.char = char;
 
