@@ -18,6 +18,8 @@ import backend.Song;
 import backend.Section;
 import backend.Rating;
 
+import flixel.addons.display.FlxBackdrop;
+import flixel.addons.display.FlxGridOverlay;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSubState;
@@ -45,7 +47,6 @@ import states.editors.CharacterEditorState;
 
 import substates.PauseSubState;
 import substates.GameOverSubstate;
-import substates.ResultsSubState;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
@@ -2507,7 +2508,7 @@ class PlayState extends MusicBeatState
 		songInfo.cameras = [camOther];
 		add(songInfo);
 
-		continueText = new FlxText(-10, 725, FlxG.width, 'Press the Accept Key to continue.', 20);
+		var continueText = new FlxText(-10, 725, FlxG.width, 'Press the Accept Key to continue.', 20);
 		continueText.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		continueText.scrollFactor.set();
 		continueText.borderSize = 2;
@@ -2524,12 +2525,11 @@ class PlayState extends MusicBeatState
 		resultsScreenText.cameras = [camOther];
 		add(resultsScreenText);
 
-		resultsScreenSubText = new FlxText(0, 690, FlxG.width, '', 20);
+		var resultsScreenSubText = new FlxText(0, 690, FlxG.width, '', 20);
 		resultsScreenSubText.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		resultsScreenSubText.scrollFactor.set();
 		resultsScreenSubText.borderSize = 2;
 		resultsScreenSubText.alpha = 0;
-		resultsScreenSubText.visible = ClientPrefs.data.judgementCounter;
 		resultsScreenSubText.screenCenter(Y);
 		resultsScreenSubText.cameras = [camOther];
 		add(resultsScreenSubText);
