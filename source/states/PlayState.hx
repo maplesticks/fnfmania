@@ -57,12 +57,14 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
+/*
 #if VIDEOS_ALLOWED 
 #if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideo as VideoHandler;
 #elseif (hxCodec >= "2.6.1") import hxcodec.VideoHandler as VideoHandler;
 #elseif (hxCodec == "2.6.0") import VideoHandler as VideoHandler;
 #else import vlc.VideoHandler; #end
 #end
+*/
 
 import objects.Note.EventNote;
 import objects.*;
@@ -527,7 +529,7 @@ class PlayState extends MusicBeatState
 		add(maniaWatermark);
 
 		songThingy = new FlxText(10, 690, FlxG.width, songName + ' - ' + storyDifficultyText, 20);
-		songThingy.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		songThingy.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]), LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		songThingy.scrollFactor.set();
 		songThingy.borderSize = 2;
 		songThingy.visible = !ClientPrefs.data.hideHud;
@@ -863,6 +865,7 @@ class PlayState extends MusicBeatState
 
 	public function startVideo(name:String)
 	{
+		/*
 		#if VIDEOS_ALLOWED
 		inCutscene = true;
 
@@ -902,6 +905,7 @@ class PlayState extends MusicBeatState
 		startAndEnd();
 		return;
 		#end
+		*/
 	}
 
 	function startAndEnd()
@@ -2586,7 +2590,7 @@ class PlayState extends MusicBeatState
 		hitTimeTxt.cameras = [camHUD];
 		hitTimeTxt.screenCenter();
 		hitTimeTxt.x = placement - 490;
-		hitTimeTxt.y = rating.y + 50;
+		hitTimeTxt.y = rating.y + 100;
 		add(hitTimeTxt);
 		hitTimeTxt.x += ClientPrefs.data.comboOffset[0];
 		hitTimeTxt.y -= ClientPrefs.data.comboOffset[1];
@@ -2624,8 +2628,8 @@ class PlayState extends MusicBeatState
 			seperatedScore.push(Math.floor(combo / 1000) % 10);
 		}
 		if(combo >= 9) {
-			add(comboSpr);
-			showCombo = true;
+			// add(comboSpr);
+			// showCombo = true;
 		}
 		seperatedScore.push(Math.floor(combo / 100) % 10);
 		seperatedScore.push(Math.floor(combo / 10) % 10);
@@ -2635,7 +2639,7 @@ class PlayState extends MusicBeatState
 		var xThing:Float = 0;
 		if (showCombo)
 		{
-			insert(members.indexOf(strumLineNotes), comboSpr);
+			// insert(members.indexOf(strumLineNotes), comboSpr);
 		}
 		insert(members.indexOf(strumLineNotes), hitTimeTxt);
 		if (!ClientPrefs.data.comboStacking)
