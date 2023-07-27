@@ -2437,10 +2437,10 @@ class PlayState extends MusicBeatState
 					LoadingState.loadAndSwitchState(new PlayState());
 				}
 			}
-			else if(ClientPrefs.data.ratingScreenPopUp && !isStoryMode)
+		/*	else if(ClientPrefs.data.ratingScreenPopUp && !isStoryMode)
 			{
 				resultsPopUp();
-			} 
+			} */
 			else
 			{
 				trace('WENT BACK TO FREEPLAY??');
