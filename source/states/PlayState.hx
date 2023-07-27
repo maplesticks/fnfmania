@@ -534,7 +534,7 @@ class PlayState extends MusicBeatState
 		timeBarBG.scrollFactor.set();
 		add(timeBarBG);
 
-		maniaWatermark = new FlxText(-10, 690, FlxG.width, 'fnf!mania (PREVIEW BUILD)', 20);
+		maniaWatermark = new FlxText(-10, 690, FlxG.width, 'fnf!mania v0.1.0', 20);
 		maniaWatermark.setFormat(Paths.font("pm-full.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		maniaWatermark.scrollFactor.set();
 		maniaWatermark.borderSize = 2;
@@ -2439,10 +2439,10 @@ class PlayState extends MusicBeatState
 					LoadingState.loadAndSwitchState(new PlayState());
 				}
 			}
-			else if(ClientPrefs.data.ratingScreenPopUp && !isStoryMode)
+		/*	else if(ClientPrefs.data.ratingScreenPopUp && !isStoryMode) note: this somehow softlocks the game and idk why
 			{
 				resultsPopUp();
-			} 
+			}  */
 			else
 			{
 				trace('WENT BACK TO FREEPLAY??');
@@ -2531,7 +2531,6 @@ class PlayState extends MusicBeatState
 		resultsScreenSubText.scrollFactor.set();
 		resultsScreenSubText.borderSize = 2;
 		resultsScreenSubText.alpha = 0;
-		resultsScreenSubText.visible = ClientPrefs.data.judgementCounter;
 		resultsScreenSubText.screenCenter(Y);
 		resultsScreenSubText.cameras = [camOther];
 		add(resultsScreenSubText);
@@ -3535,14 +3534,12 @@ class PlayState extends MusicBeatState
 		else if (songMisses < 10)
 			ratingFC = 'SDCB';
 
-		judgements.text = '	
-		Total Notes Hit: $totalNotesHit
-		Sicks: $sicks
+		judgements.text = 'Sicks: $sicks
 		Goods: $goods
 		Bads: $bads
 		Shits: $shits
 		Combo: $combo
-		Score: $songScore ';
+		Score: $songScore';
 	}
 
 	

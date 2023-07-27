@@ -62,6 +62,11 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'bool');
 		addOption(option);
 
+		var option:Option = new Option('Smooth Camera',
+			"If checked, the camera will be smooth. (do I  really have to explain this?)",
+			'smoothCamera',
+			'bool');
+		addOption(option);
 
 		var option:Option = new Option('Disable Reset Button',
 			"If checked, pressing Reset won't do anything.",

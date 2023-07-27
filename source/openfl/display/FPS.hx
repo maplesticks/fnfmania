@@ -86,8 +86,8 @@ class FPS extends TextField
 			text = "FPS: " + currentFPS;
 			var memoryMegas:Float = 0;
 		
-			text += "\nFNF!MANIA (PREVIEW BUILD)";
-			text += "\nPE " + MainMenuState.psychEngineVersion;
+			text += "\nFNF!MANIA v0.1.0";
+			text += "\nPE v" + MainMenuState.psychEngineVersion;
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 			text += "\nMemory: " + memoryMegas + " MB";
