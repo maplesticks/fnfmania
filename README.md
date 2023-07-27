@@ -1,5 +1,5 @@
 ### fnf!mania engine.
-Engine originally used on [Vs Car](https://gamebanana.com/wips/73376), intended to be a modified psych engine with different ui features and a easier chart editor.
+a modified psych engine. 
 
 ## Installation:
 
@@ -10,8 +10,8 @@ after it finishes, simply type `haxelib run hmm install` in order to install all
 same goes for *Lua Scripts*, comment out or delete the line with `LUA_ALLOWED`, this and other customization options are all available within the `Project.xml` file
 
 ## Credits:
-* cutzye - Programmer
-* haoneRG - Code Help, Made the chart editor
+* retro_ - Programmer
+* haoneRG - programmer
 
 # Special Thanks
 * Psych Engine Devs!
