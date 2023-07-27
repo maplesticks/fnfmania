@@ -37,7 +37,7 @@ class SaveVariables {
 		[0xFFE276FF, 0xFFFFF9FF, 0xFF60008D],
 		[0xFF3DCAFF, 0xFFF4FFFF, 0xFF003060],
 		[0xFF71E300, 0xFFF6FFE6, 0xFF003100],
-		[0xFFFF884E, 0xFFFFFAF5, 0xFF6C0000]];
+		[0xFFF9393F, 0xFFFFFAF5, 0xFF6C0000]];
 
 	public var ghostTapping:Bool = true;
 	public var timeBarType:String = 'Current Time and Length';
@@ -78,6 +78,8 @@ class SaveVariables {
 	public var safeFrames:Float = 10;
 	public var discordRPC:Bool = true;
 	//fnf!mania settings starts here
+	public var smoothCamera:Bool = true;
+	public var iconBopStyle:String = 'Normal';
 	public var camMovementOnNote:Bool = true;
 	public var judgementCounter:Bool = true;
 	public var noteUnderlayAlpha:Float = 0;

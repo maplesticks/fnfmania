@@ -24,7 +24,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			note.centerOrigin();
 			note.playAnim('static');
 			notes.add(note);
-		}
+		}		
 
 		// options
 
@@ -112,6 +112,15 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		addOption(option);
+
+		var option:Option = new Option('Icon Bop Style:',
+			"What style of Icon Bopping do you prefer?",
+			'iconBopStyle',
+			'string',
+			['Normal', 'Reversed', 'Sus', 'Cassete', 'Squish', 'Box', 'Goose', 'None']); // Change this to have more options in the future...
+		option.onChange = onChangeIcon;
+		option.special = 'icon';
+		addOption(option);
 		
 		#if !mobile
 		var option:Option = new Option('FPS Counter',
@@ -154,12 +163,13 @@ class VisualsUISubState extends BaseOptionsMenu
 
 		super();
 		add(notes);
+		add(icon);
 	}
 
 	override function changeSelection(change:Int = 0)
 	{
 		super.changeSelection(change);
-		
+
 		if(noteOptionID < 0) return;
 
 		for (i in 0...Note.colArray.length)
@@ -171,7 +181,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			else
 				notesTween[i] = FlxTween.tween(note, {y: -200}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});
 		}
-	}
+	}	
 
 	var changedMusic:Bool = false;
 	function onChangePauseMusic()
@@ -202,6 +212,12 @@ class VisualsUISubState extends BaseOptionsMenu
 		note.texture = skin; //Load texture and anims
 		note.reloadNote();
 		note.playAnim('static');
+	}
+
+	function onChangeIcon(){
+		var icon = options.BaseOptionsMenu.instance.icon;
+		icon.bopType = ClientPrefs.data.iconBopStyle;
+		icon.clear();
 	}
 
 	override function destroy()

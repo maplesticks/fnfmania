@@ -3,6 +3,8 @@ package options;
 import objects.CheckboxThingie;
 import objects.AttachedText;
 import options.Option;
+import objects.HealthIcon;
+import backend.Conductor;
 
 class BaseOptionsMenu extends MusicBeatSubstate
 {
@@ -20,10 +22,15 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	public var title:String;
 	public var rpcTitle:String;
 
+	public static var instance:BaseOptionsMenu;
+	var icon:HealthIcon;
+	var iconTween:FlxTween;
+
 	public function new()
 	{
 		super();
 
+		instance = this;
 		if(title == null) title = 'Options';
 		if(rpcTitle == null) rpcTitle = 'Options Menu';
 		
@@ -36,6 +43,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
+
+		Conductor.changeBPM(120);
 
 		// avoids lagspikes while scrolling through menus!
 		grpOptions = new FlxTypedGroup<Alphabet>();
@@ -91,6 +100,17 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			updateTextFrom(optionsArray[i]);
 		}
 
+		// icon stuff
+		Conductor.changeBPM(120);
+		var char = 'bf';
+		if(states.PlayState.isPixelStage) char = 'bf-pixel';
+		icon = new HealthIcon(char, true);
+		icon.bopType = ClientPrefs.data.iconBopStyle;
+		icon.x = 1320;
+		icon.y = 280;
+		icon.canBop = true;
+		add(icon);
+
 		changeSelection();
 		reloadCheckboxes();
 	}
@@ -105,6 +125,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	var holdValue:Float = 0;
 	override function update(elapsed:Float)
 	{
+		if (FlxG.sound.music != null)
+			Conductor.songPosition = FlxG.sound.music.time;
+
+		if(icon != null) icon.dance(elapsed);
+
 		if (controls.UI_UP_P)
 		{
 			changeSelection(-1);
@@ -228,6 +253,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		}
 		super.update(elapsed);
 	}
+	override function beatHit()
+	{
+		super.beatHit();
+		if(icon != null) icon.beatHit();
+	}
 
 	function updateTextFrom(option:Option) {
 		var text:String = option.displayFormat;
@@ -257,8 +287,12 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		descText.screenCenter(Y);
 		descText.y += 270;
 
-		var bullShit:Int = 0;
+		if(iconTween != null) iconTween.cancel();
+		if(optionsArray[curSelected].special == 'icon') iconTween = FlxTween.tween(icon, {x: 1060}, 0.45, {ease: FlxEase.quadInOut});
+		else iconTween = FlxTween.tween(icon, {x: 1320}, 0.3, {ease: FlxEase.quadInOut});
 
+		var bullShit:Int = 0;
+		
 		for (item in grpOptions.members) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
